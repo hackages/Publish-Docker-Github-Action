@@ -17,9 +17,6 @@ if [ -z "${INPUT_PASSWORD}" ]; then
 fi
 
 BRANCH=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g" | sed -e "s/\//-/g")
-if [ "${BRANCH}" = "master" ]; then
-  BRANCH="latest"
-fi;
 
 # if it's a tag
 if [ $(echo ${GITHUB_REF} | sed -e "s/refs\/tags\///g") != ${GITHUB_REF} ]; then
@@ -54,7 +51,7 @@ if [ "${INPUT_SNAPSHOT}" = "true" ]; then
   TIMESTAMP=`date +%Y%m%d%H%M%S`
   SHORT_SHA=$(echo "${GITHUB_SHA}" | cut -c1-6)
   SNAPSHOT_TAG="${TIMESTAMP}${SHORT_SHA}"
-  SHA_DOCKER_NAME="${INPUT_NAME}:${SNAPSHOT_TAG}"
+  SHA_DOCKER_NAME="${DOCKERNAME}:${SNAPSHOT_TAG}"
   docker build $BUILDPARAMS -t ${DOCKERNAME} -t ${SHA_DOCKER_NAME} .
   docker push ${DOCKERNAME}
   docker push ${SHA_DOCKER_NAME}
