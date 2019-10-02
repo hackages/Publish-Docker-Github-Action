@@ -20,7 +20,7 @@ BRANCH=$(echo ${GITHUB_REF} | sed -e "s/refs\/heads\///g" | sed -e "s/\//-/g")
 
 # if it's a tag
 if [ $(echo ${GITHUB_REF} | sed -e "s/refs\/tags\///g") != ${GITHUB_REF} ]; then
-  BRANCH="latest"
+  BRANCH="${GITHUB_SHA}"
 fi;
 
 # if it's a pull request

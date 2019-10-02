@@ -17,15 +17,15 @@ teardown() {
   unset MOCK_ERROR_CONDITION
 }
 
-@test "it pushes master branch to latest" {
+@test "it pushes master branch to master" {
   export GITHUB_REF='refs/heads/master'
 
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker build -t my/repositor-master .
-Called /usr/local/bin/docker push my/repositor-master
-::set-output name=tag::latest
+Called /usr/local/bin/docker build -t my/repository-master .
+Called /usr/local/bin/docker push my/repository-master
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -52,7 +52,7 @@ Called /usr/local/bin/docker logout"
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
 Called /usr/local/bin/docker build -t my/repository-myBranch-withDash .
-Called /usr/local/bin/docker push my/repositor-myBranch-withDash
+Called /usr/local/bin/docker push my/repository-myBranch-withDash
 ::set-output name=tag::myBranch-withDash
 Called /usr/local/bin/docker logout"
   echo $output
@@ -61,13 +61,14 @@ Called /usr/local/bin/docker logout"
 
 @test "it pushes tags to latest" {
   export GITHUB_REF='refs/tags/myRelease'
+  export GITHUB_SHA='12169ed809255604e557a82617264e9c373faca7'
 
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker build -t my/repository-latest .
-Called /usr/local/bin/docker push my/repository-latest
-::set-output name=tag::latest
+Called /usr/local/bin/docker build -t my/repository-12169ed809255604e557a82617264e9c373faca7 .
+Called /usr/local/bin/docker push my/repository-12169ed809255604e557a82617264e9c373faca7
+::set-output name=tag::12169ed809255604e557a82617264e9c373faca7
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -79,9 +80,9 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh  export GITHUB_REF='refs/heads/master'
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker build -f MyDockerFileName -t my/repository-latest .
-Called /usr/local/bin/docker push my/repository-latest
-::set-output name=tag::latest
+Called /usr/local/bin/docker build -f MyDockerFileName -t my/repository-master .
+Called /usr/local/bin/docker push my/repository-master
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -95,11 +96,11 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker build -t my/repository-latest -t my/repository-latest:19700101010112169e .
-Called /usr/local/bin/docker push my/repository-latest
-Called /usr/local/bin/docker push my/repository-latest:19700101010112169e
+Called /usr/local/bin/docker build -t my/repository-master -t my/repository-master:19700101010112169e .
+Called /usr/local/bin/docker push my/repository-master
+Called /usr/local/bin/docker push my/repository-master:19700101010112169e
 ::set-output name=snapshot-tag::19700101010112169e
-::set-output name=tag::latest
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -114,12 +115,12 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker pull my/repository-latest
-Called /usr/local/bin/docker build --cache-from my/repository:latest -t my/repository:latest -t my/repository-latest:19700101010112169e .
-Called /usr/local/bin/docker push my/repository-latest
-Called /usr/local/bin/docker push my/repository-latest:19700101010112169e
+Called /usr/local/bin/docker pull my/repository-master
+Called /usr/local/bin/docker build --cache-from my/repositor-master -t my/repository-master -t my/repository-master:19700101010112169e .
+Called /usr/local/bin/docker push my/repository-master
+Called /usr/local/bin/docker push my/repository-master:19700101010112169e
 ::set-output name=snapshot-tag::19700101010112169e
-::set-output name=tag::latest
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -130,17 +131,17 @@ Called /usr/local/bin/docker logout"
   export MOCK_DATE='197001010101'
   export INPUT_SNAPSHOT='true'
   export INPUT_CACHE='true'
-  export MOCK_ERROR_CONDITION='pull my/repository:latest'
+  export MOCK_ERROR_CONDITION='pull my/repository:master'
 
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker pull my/repository-latest
-Called /usr/local/bin/docker build -t my/repository-latest -t my/repository-latest:19700101010112169e .
-Called /usr/local/bin/docker push my/repository-latest
-Called /usr/local/bin/docker push my/repository-latest:19700101010112169e
+Called /usr/local/bin/docker pull my/repository-master
+Called /usr/local/bin/docker build -t my/repository-master -t my/repository-master:19700101010112169e .
+Called /usr/local/bin/docker push my/repository-master
+Called /usr/local/bin/docker push my/repository-master:19700101010112169e
 ::set-output name=snapshot-tag::19700101010112169e
-::set-output name=tag::latest
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -155,11 +156,11 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker build -f MyDockerFileName -t my/repository-latest -t my/repository-latest:19700101010112169e .
-Called /usr/local/bin/docker push my/repository-latest
-Called /usr/local/bin/docker push my/repository-latest:19700101010112169e
+Called /usr/local/bin/docker build -f MyDockerFileName -t my/repository-master -t my/repository-master:19700101010112169e .
+Called /usr/local/bin/docker push my/repository-master
+Called /usr/local/bin/docker push my/repository-master:19700101010112169e
 ::set-output name=snapshot-tag::19700101010112169e
-::set-output name=tag::latest
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -175,12 +176,12 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker pull my/repository-latest
-Called /usr/local/bin/docker build -f MyDockerFileName --cache-from my/repositor-latest -t my/repository-latest -t my/repository-latest:19700101010112169e .
-Called /usr/local/bin/docker push my/repository-latest
-Called /usr/local/bin/docker push my/repository-latest:19700101010112169e
+Called /usr/local/bin/docker pull my/repository-master
+Called /usr/local/bin/docker build -f MyDockerFileName --cache-from my/repositor-master -t my/repository-master -t my/repository-master:19700101010112169e .
+Called /usr/local/bin/docker push my/repository-master
+Called /usr/local/bin/docker push my/repository-master:19700101010112169e
 ::set-output name=snapshot-tag::19700101010112169e
-::set-output name=tag::latest
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -192,9 +193,9 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin https://myRegistry
-Called /usr/local/bin/docker build -t my/repository-latest .
-Called /usr/local/bin/docker push my/repository-latest
-::set-output name=tag::latest
+Called /usr/local/bin/docker build -t my/repository-master .
+Called /usr/local/bin/docker push my/repository-master
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
@@ -206,10 +207,10 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker pull my/repository-latest
-Called /usr/local/bin/docker build --cache-from my/repository-latest -t my/repository-latest .
-Called /usr/local/bin/docker push my/repository-latest
-::set-output name=tag::latest
+Called /usr/local/bin/docker pull my/repository-master
+Called /usr/local/bin/docker build --cache-from my/repository-master -t my/repository-master .
+Called /usr/local/bin/docker push my/repository-master
+::set-output name=tag::master
 Called /usr/local/bin/docker logout"
   echo $output
   [ "$output" = "$expected" ]
