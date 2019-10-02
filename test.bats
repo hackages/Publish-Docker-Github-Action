@@ -223,8 +223,8 @@ Called /usr/local/bin/docker logout"
   run /entrypoint.sh
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
-Called /usr/local/bin/docker build -t my/repository-latest:12169ed809255604e557a82617264e9c373faca7 .
-Called /usr/local/bin/docker push my/repository-latest:12169ed809255604e557a82617264e9c373faca7
+Called /usr/local/bin/docker build -t my/repository-12169ed809255604e557a82617264e9c373faca7 .
+Called /usr/local/bin/docker push my/repository-12169ed809255604e557a82617264e9c373faca7
 ::set-output name=tag::12169ed809255604e557a82617264e9c373faca7
 Called /usr/local/bin/docker logout"
   echo $output
