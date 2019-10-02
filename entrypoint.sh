@@ -34,7 +34,12 @@ fi
 
 echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin ${INPUT_REGISTRY}
 
-DOCKERNAME="${INPUT_NAME}-${BRANCH}"
+ DOCKERNAME="${INPUT_NAME}-${BRANCH}"
+
+if [ ! -z "${INPUT_GITHUB}" ]; then
+  DOCKERNAME="docker.pkg.github.com/${GITHUB_REPOSITORY}/${INPUT_NAME}-${BRANCH}"
+fi
+
 BUILDPARAMS=""
 
 if [ ! -z "${INPUT_DOCKERFILE}" ]; then
