@@ -32,12 +32,18 @@ if [ ! -z "${INPUT_WORKDIR}" ]; then
   cd "${INPUT_WORKDIR}"
 fi
 
-echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin ${INPUT_REGISTRY}
+REGISTRY="${INPUT_REGISTRY}"
+DOCKERNAME="${INPUT_NAME}-${BRANCH}"
 
- DOCKERNAME="${INPUT_NAME}-${BRANCH}"
+if [ "${INPUT_GITHUB}" = "true" ]; then
+  REGISTRY="docker.pkg.github.com"
+fi
 
-if [ ! -z "${INPUT_GITHUB}" ]; then
-  DOCKERNAME="docker.pkg.github.com/${GITHUB_REPOSITORY}/${INPUT_NAME}-${BRANCH}"
+echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin ${REGISTRY}
+
+
+if [ "${INPUT_GITHUB}" = "true" ]; then
+  DOCKERNAME="$REGISTRY/${GITHUB_REPOSITORY}/${INPUT_NAME}-${BRANCH}"
 fi
 
 BUILDPARAMS=""
