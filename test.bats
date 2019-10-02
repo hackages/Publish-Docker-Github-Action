@@ -116,7 +116,7 @@ Called /usr/local/bin/docker logout"
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
 Called /usr/local/bin/docker pull my/repository-master
-Called /usr/local/bin/docker build --cache-from my/repositor-master -t my/repository-master -t my/repository-master:19700101010112169e .
+Called /usr/local/bin/docker build --cache-from my/repository-master -t my/repository-master -t my/repository-master:19700101010112169e .
 Called /usr/local/bin/docker push my/repository-master
 Called /usr/local/bin/docker push my/repository-master:19700101010112169e
 ::set-output name=snapshot-tag::19700101010112169e
@@ -131,7 +131,7 @@ Called /usr/local/bin/docker logout"
   export MOCK_DATE='197001010101'
   export INPUT_SNAPSHOT='true'
   export INPUT_CACHE='true'
-  export MOCK_ERROR_CONDITION='pull my/repository:master'
+  export MOCK_ERROR_CONDITION='pull my/repository-master'
 
   run /entrypoint.sh
 
@@ -177,7 +177,7 @@ Called /usr/local/bin/docker logout"
 
   local expected="Called /usr/local/bin/docker login -u USERNAME --password-stdin
 Called /usr/local/bin/docker pull my/repository-master
-Called /usr/local/bin/docker build -f MyDockerFileName --cache-from my/repositor-master -t my/repository-master -t my/repository-master:19700101010112169e .
+Called /usr/local/bin/docker build -f MyDockerFileName --cache-from my/repository-master -t my/repository-master -t my/repository-master:19700101010112169e .
 Called /usr/local/bin/docker push my/repository-master
 Called /usr/local/bin/docker push my/repository-master:19700101010112169e
 ::set-output name=snapshot-tag::19700101010112169e
