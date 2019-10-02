@@ -37,7 +37,7 @@ fi
 
 echo ${INPUT_PASSWORD} | docker login -u ${INPUT_USERNAME} --password-stdin ${INPUT_REGISTRY}
 
-DOCKERNAME="${INPUT_NAME}:${BRANCH}"
+DOCKERNAME="${INPUT_NAME}-${BRANCH}"
 BUILDPARAMS=""
 
 if [ ! -z "${INPUT_DOCKERFILE}" ]; then
